@@ -15,6 +15,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
   bool showLogin = true; // логин меняем на регистр
 
+  Map<String, String> history = {};
+
   @override
   Widget build(BuildContext context) {
     Widget _logo() {
@@ -112,10 +114,37 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       );
     }
 
-    void _buttonAction() {
+    void _buttonActionRegister() {
       String _email = _emailController.text;
       String _password = _passwordController.text;
-      print('The values are: $_email, $_password');
+
+      var temp = history.containsKey(_email);
+      if (temp) {
+        print('Email already exist');
+      } else {
+        history.addAll({_email: _password});
+        print(history);
+      }
+
+      _emailController.clear();
+      _passwordController.clear();
+    }
+
+    void _buttonActionLogin() {
+      String _email = _emailController.text;
+      String _password = _passwordController.text;
+
+      var temp = history.containsKey(_email);
+      if (temp) {
+        if (history[_email] == _password) {
+          print('You logged in successfully');
+        } else {
+          print('Wrong password!');
+        }
+      } else {
+        print('Wrong email!');
+      }
+
       _emailController.clear();
       _passwordController.clear();
     }
@@ -129,7 +158,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           (showLogin
               ? Column(
                   children: [
-                    _form('LOGIN', _buttonAction),
+                    _form('LOGIN', _buttonActionLogin),
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: GestureDetector(
@@ -148,7 +177,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                 )
               : Column(
                   children: <Widget>[
-                    _form('REGISTER', _buttonAction),
+                    _form('REGISTER', _buttonActionRegister),
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: GestureDetector(
